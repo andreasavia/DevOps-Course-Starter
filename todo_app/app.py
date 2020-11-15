@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, request
 
 from todo_app.flask_config import Config
 
@@ -8,8 +8,11 @@ app.config.from_object(Config)
 
 @app.route('/')
 def index():
-    return 'Hello World!'
+    # Modify the index() function to get the list of items and
+    # update the index.html template to display their titles as a list.
+    return render_template('layout.html')
 
 
+@app.route('/login', methods=[POST'])
 if __name__ == '__main__':
     app.run()
