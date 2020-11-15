@@ -13,6 +13,5 @@ def index():
     return render_template('layout.html')
 
 
-@app.route('/login', methods=[POST'])
 if __name__ == '__main__':
     app.run()
