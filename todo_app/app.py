@@ -12,7 +12,7 @@ def index():
     # Modify the index() function to get the list of items and
     # update the index.html template to display their titles as a list.
     items = get_items()
-    return render_template('layout.html', items=items)
+    return render_template('index.html', items=items)
 
 
 if __name__ == '__main__':
