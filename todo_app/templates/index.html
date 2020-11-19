@@ -24,6 +24,7 @@
       <tr>
         <td>{{ item.title }}</td>
         <td>{{ item.status }}</td>
+        <td><a href="{{ url_for('complete',id=item.id) }}">Mark as Complete!</a></td>
       </tr>
       {% endfor %}
     </table>

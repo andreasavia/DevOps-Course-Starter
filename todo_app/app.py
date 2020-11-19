@@ -1,6 +1,6 @@
 from flask.globals import request
 from flask.helpers import url_for
-from todo_app.data.session_items import add_item, get_items
+from todo_app.data.session_items import add_item, get_items, get_item, save_item, complete_item
 from flask import Flask, render_template, redirect
 
 from todo_app.flask_config import Config
@@ -18,6 +18,12 @@ def index():
 @app.route('/add', methods=['POST'])
 def add():
     add_item(request.form.get('newItem'))
+    return redirect(url_for('index'))
+
+
+@app.route('/complete/<id>')
+def complete(id):
+    complete_item(id)
     return redirect(url_for('index'))
 
 
