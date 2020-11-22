@@ -44,8 +44,10 @@
     <hr>
 
     <div>
-      <form action="{{url_for('sort')}}">
-        <input type="submit" value="Sort Tasks" class="btn btn-warning" />
+      <form action="{{url_for('sort')}}" method="POST">
+        <input type="submit" name="sort_button" value="Completed First" class="btn btn-warning" />
+        <input type="submit" name="sort_button" value="Not Started First" class="btn btn-warning" />
+        <input type="submit" name="sort_button" value="Default Order" class="btn btn-info" />
       </form>
     </div>
 

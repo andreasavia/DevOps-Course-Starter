@@ -28,10 +28,15 @@ def complete(id):
     return redirect(url_for('index'))
 
 
-@app.route('/sort')
+@app.route('/sort', methods=['POST'])
 def sort():
     items = get_items()
-    sorted_items = sorted(items, key=itemgetter('status'))
+    if request.form['sort_button'] == "Completed First":
+        sorted_items = sorted(items, key=itemgetter('status'))
+    if request.form['sort_button'] == "Not Started First":
+        sorted_items = sorted(items, key=itemgetter('status'), reverse=True)
+    if request.form['sort_button'] == "Default Order":
+        return redirect(url_for('index'))
     return render_template('index.html', items=sorted_items)
 
 
