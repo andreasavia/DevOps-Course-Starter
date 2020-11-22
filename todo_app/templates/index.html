@@ -44,13 +44,10 @@
     <hr>
 
     <div>
-      <form action="{{url_for('sort')}}" method="POST">
-        <input type="submit" name="sort_button" value="Completed First" class="btn btn-warning" />
-        <input type="submit" name="sort_button" value="Not Started First" class="btn btn-warning" />
-        <input type="submit" name="sort_button" value="Default Order" class="btn btn-info" />
-      </form>
+      <a class="btn btn-info" href="{{url_for('doneFirst')}}">Sort by Done</a>
+      <a class="btn btn-info" href="{{url_for('notDoneFirst')}}">Sort by Not Started</a>
+      <a class="btn btn-light" href="{{url_for('index')}}">Restore Order</a>
     </div>
-
   </div>
 
 </div>
