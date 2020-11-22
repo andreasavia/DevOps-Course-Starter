@@ -1,3 +1,4 @@
+from operator import itemgetter
 from flask.globals import request
 from flask.helpers import url_for
 from todo_app.data.session_items import add_item, get_items, complete_item
@@ -25,6 +26,13 @@ def add():
 def complete(id):
     complete_item(id)
     return redirect(url_for('index'))
+
+
+@app.route('/sort')
+def sort():
+    items = get_items()
+    sorted_items = sorted(items, key=itemgetter('status'))
+    return render_template('index.html', items=sorted_items)
 
 
 if __name__ == '__main__':
