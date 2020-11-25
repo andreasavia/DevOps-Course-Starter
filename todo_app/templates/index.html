@@ -9,23 +9,61 @@
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    <h2>To-do list</h2>
-  </div>
-</div>
-
-<div class="row">
 
   <div class="col-md-7">
-    <table style="width:350pt">
-      {% for item in items %}
-      <tr>
-        <td>{{ item.title }}</td>
-        <td>{{ item.status }}</td>
-        <td><a href="{{ url_for('complete',id=item.id) }}">Mark as Complete!</a></td>
-      </tr>
-      {% endfor %}
-    </table>
+
+    <div class="card-hover-shadow-2x mb-3 card">
+
+      <div class="card-header-tab card-header">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal">
+          <span><i class="fa fa-tasks" style="color:rgb(0, 0, 0)"></i></a></span>
+          <span>To-Do List</span>
+        </div>
+      </div>
+
+      <div class="ps-content">
+        <ul class=" list-group list-group-flush">
+
+          {% for item in items %}
+          <li class="list-group-item d-flex align-items-center" style="max-height: 30pt;">
+
+            {% if item.status == "Not Started" %}
+            <span>{{ item.title }}</span>
+            <span>&nbsp</span>
+            <span class="badge badge-secondary badge-pill">to do</span>
+            <span style="right: 0%;position: absolute;">
+              <button class="border-0 btn-transition btn btn-outline-success"
+                onclick="window.location.href='{{url_for('complete',id=item.id)}}';">
+                <i class="fa fa-check"></i>
+              </button>
+              <button class="border-0 btn-transition btn btn-outline-danger"
+                onclick="window.location.href='{{url_for('delete',id=item.id)}}';">
+                <i class="fa fa-trash"></i>
+              </button>
+            </span>
+
+            {% else %}
+            <span>{{ item.title }}</span>
+            <span>&nbsp</span>
+            <span class="badge badge-success badge-pill">completed</span>
+            <span style="right: 0%;position: absolute;">
+              <button class="border-0 btn-transition btn btn-outline-info">
+                <i class="fa fa-archive"></i>
+              </button>
+              <button class="border-0 btn-transition btn btn-outline-danger"
+                onclick="window.location.href='{{url_for('delete',id=item.id)}}';">
+                <i class="fa fa-trash"></i>
+              </button>
+            </span>
+
+            {% endif %}
+
+          </li>
+          {% endfor %}
+
+        </ul>
+      </div>
+    </div>
   </div>
 
   <div class="col-md-5">
@@ -46,7 +84,7 @@
     <div>
       <a class="btn btn-info" href="{{url_for('doneFirst')}}">Sort by Done</a>
       <a class="btn btn-info" href="{{url_for('notDoneFirst')}}">Sort by Not Started</a>
-      <a class="btn btn-light" href="{{url_for('index')}}">Restore Order</a>
+      <a class="btn btn-secondary" href="{{url_for('index')}}">Restore Order</a>
     </div>
   </div>
 

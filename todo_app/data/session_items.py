@@ -82,3 +82,15 @@ def complete_item(id):
     save_item(item)
 
     return item
+
+
+def delete_item(id):
+    """
+    Deletes the item beloging at the given ID
+
+    Args:
+        item: The item to delete
+    """
+    items = get_items()
+    items.pop(int(id)-1)
+    session['items'] = items
