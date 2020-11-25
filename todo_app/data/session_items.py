@@ -77,9 +77,9 @@ def complete_item(id):
     Args:
         item: The item to complete
     """
-    item = get_item(id)
-    item['status'] = 'Completed'
-    save_item(item)
+    item = get_item(id)  # get item
+    item['status'] = 'Completed'  # update status
+    save_item(item)  # save item
 
     return item
 
@@ -91,6 +91,6 @@ def delete_item(id):
     Args:
         item: The item to delete
     """
-    items = get_items()
-    items.pop(int(id)-1)
-    session['items'] = items
+    items = get_items()  # get all items
+    items.pop(int(id)-1)  # remove given item
+    session['items'] = items  # update items in session
