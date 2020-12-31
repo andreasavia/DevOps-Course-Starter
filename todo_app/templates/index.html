@@ -32,14 +32,10 @@
             <span>&nbsp</span>
             <span class="badge badge-secondary badge-pill">to do</span>
             <span style="right: 0%;position: absolute;">
-              <button class="border-0 btn-transition btn btn-outline-success"
-                onclick="window.location.href='{{url_for('complete',id=item.id)}}';">
-                <i class="fa fa-check"></i>
-              </button>
-              <button class="border-0 btn-transition btn btn-outline-danger"
-                onclick="window.location.href='{{url_for('delete',id=item.id)}}';">
-                <i class="fa fa-trash"></i>
-              </button>
+              <a href="{{ url_for('complete',id=item.id) }}">
+                <i class="border-0 btn-transition btn btn-outline-success fa fa-check"></i></a>
+              <a href="{{ url_for('delete',id=item.id) }}">
+                <i class="border-0 btn-transition btn btn-outline-danger fa fa-trash"></i></a>
             </span>
 
             {% else %}
@@ -47,13 +43,9 @@
             <span>&nbsp</span>
             <span class="badge badge-success badge-pill">completed</span>
             <span style="right: 0%;position: absolute;">
-              <button class="border-0 btn-transition btn btn-outline-info">
-                <i class="fa fa-archive"></i>
-              </button>
-              <button class="border-0 btn-transition btn btn-outline-danger"
-                onclick="window.location.href='{{url_for('delete',id=item.id)}}';">
-                <i class="fa fa-trash"></i>
-              </button>
+              <i class="border-0 btn-transition btn btn-outline-info fa fa-archive"></i>
+              <a href="{{ url_for('delete',id=item.id) }}">
+                <i class="border-0 btn-transition btn btn-outline-danger fa fa-trash"></i></a>
             </span>
 
             {% endif %}
