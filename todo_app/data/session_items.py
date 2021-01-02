@@ -1,3 +1,4 @@
+from operator import itemgetter
 from flask import session
 
 _DEFAULT_ITEMS = [
@@ -13,6 +14,7 @@ def get_items():
     Returns:
         list: The list of saved items.
     """
+
     return session.get('items', _DEFAULT_ITEMS)
 
 
@@ -94,3 +96,24 @@ def delete_item(id):
     items = get_items()  # get all items
     items.pop(int(id)-1)  # remove given item
     session['items'] = items  # update items in session
+
+
+def sort_items(order):
+    """
+    docstring
+    """
+    items = get_items()
+    if order == "0":
+        updatedItems = sorted(items, key=itemgetter('id'))
+        print("items order updated : 0")
+    elif order == "1":
+        updatedItems = sorted(items, key=itemgetter('status'))
+        print("items order updated : 1")
+    elif order == "2":
+        updatedItems = sorted(items, key=itemgetter('status'), reverse=True)
+        print("items order updated : 2")
+    else:
+        updatedItems = items
+        print("items order NOT updated")
+
+    session['items'] = updatedItems

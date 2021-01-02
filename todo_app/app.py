@@ -1,7 +1,7 @@
 from operator import itemgetter
 from flask.globals import request
 from flask.helpers import url_for
-from todo_app.data.session_items import add_item, get_items, complete_item, delete_item
+from todo_app.data.session_items import add_item, get_items, complete_item, delete_item, sort_items
 from flask import Flask, render_template, redirect
 
 from todo_app.flask_config import Config
@@ -42,22 +42,11 @@ def delete(id):
     return redirect(url_for('index'))
 
 
-@app.route('/doneFirst')
-def doneFirst():
+@app.route('/sort/<order>')
+def sort(order):
 
-    # get all items and sort them
-    items = get_items()
-    doneFirstItems = sorted(items, key=itemgetter('status'))
-    return render_template('index.html', items=doneFirstItems)
-
-
-@app.route('/notDoneFirst')
-def notDoneFirst():
-
-    # get all items and sort them
-    items = get_items()
-    notDoneFirstItems = sorted(items, key=itemgetter('status'), reverse=True)
-    return render_template('index.html', items=notDoneFirstItems)
+    sort_items(order)
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":
