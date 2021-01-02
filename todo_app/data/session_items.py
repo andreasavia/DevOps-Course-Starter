@@ -93,14 +93,23 @@ def delete_item(id):
     Args:
         item: The item to delete
     """
+
     items = get_items()  # get all items
-    items.pop(int(id)-1)  # remove given item
-    session['items'] = items  # update items in session
+    item = get_item(id)  # get all items
+
+    idx = 0
+    for item in items:
+        if item['id'] == int(id):
+            break
+        idx = idx + 1
+
+    items.pop(idx)  # remove given item
+    session['items'] = items  # update items in session"""
 
 
 def sort_items(order):
     """
-    docstring
+    Updated the session based on the user's sort preference
     """
     items = get_items()
     if order == "0":
