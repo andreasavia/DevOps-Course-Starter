@@ -1,4 +1,3 @@
-from operator import itemgetter
 from flask.globals import request
 from flask.helpers import url_for
 from todo_app.data.session_items import add_item, get_items, complete_item, delete_item, sort_items
