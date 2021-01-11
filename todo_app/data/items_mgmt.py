@@ -2,53 +2,88 @@ from todo_app.flask_config import TRELLO_API_KEY, TRELLO_API_TOKEN
 import requests
 import json
 
-query = {
-    'key': TRELLO_API_KEY,
-    'token': TRELLO_API_TOKEN
-}
 
-boards_response = requests.request(
-    "GET",
-    "https://api.trello.com/1/members/me/boards/",
-    params=query
-)
+def get_board_id():
+    boards_response = requests.request(
+        "GET",
+        "https://api.trello.com/1/members/me/boards/",
+        params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN}
+    )
+    boards = json.loads(boards_response.text)
+    board_id = None
+    board_name = None
 
-boards = json.loads(boards_response.text)
+    for board in boards:
+        board_name = board['name']
+        board_closed = board['closed']
+        print("Evaluating Trello board " + board_name)
 
-BOARD_ID = None
-board_name = None
+        if board_name == "To-Do App" and board_closed is False:
+            board_id = board['id']
+            print("Trello board " + board_name + " found!")
+            break
 
-for board in boards:
-    board_name = board['name']
-    board_closed = board['closed']
-    print("Evaluating Trello board " + board_name)
+    if board_id is None:
+        print("Trello board not found among existing ones and creating a new one for the To-Do App!")
 
-    if board_name == "To-Do App" and board_closed is False:
-        BOARD_ID = board['id']
-        print("Trello board " + board_name + " found!")
-        break
+    return board_id
 
-if BOARD_ID is None:
-    print("Trello board not found among existing ones and creating a new one for the To-Do App!")
 
-lists_response = requests.request(
-    "GET",
-    "https://api.trello.com/1/boards/" + BOARD_ID + "/lists",
-    params=query
-)
-lists = json.loads(lists_response.text)
+def get_lists_id(board_id):
+    lists_response = requests.request(
+        "GET",
+        "https://api.trello.com/1/boards/" + board_id + "/lists",
+        params={
+            'key': TRELLO_API_KEY,
+            'token': TRELLO_API_TOKEN
+        }
+    )
 
-todoList, doingList, doneList = False, False, False
-for list in lists:
-    if list['name'] == 'To-Do' and list['closed'] is False:
-        todoList = True
-    elif list['name'] == 'Doing' and list['closed'] is False:
-        doingList = True
-    elif list['name'] == 'Done' and list['closed'] is False:
-        doneList = True
+    lists = json.loads(lists_response.text)
+    idLists = {'todo': '', 'doing': '', 'done': ''}
+    for list in lists:
+        if list['name'] == 'To-Do' and list['closed'] is False:
+            idLists['todo'] = list['id']
+        elif list['name'] == 'Doing' and list['closed'] is False:
+            idLists['doing'] = list['id']
+        elif list['name'] == 'Done' and list['closed'] is False:
+            idLists['done'] = list['id']
 
-if todoList is True and doingList is True and doneList is True:
-    print("All required lists are present in the Trello board " + board_name)
-else:
-    print("The required lists for the To-Do App are present in " + board_name +
-          "\nPlease ensure the following lists are created: To-Do, Doing and Done")
+    if idLists['todo'] != '' and idLists['doing'] != '' and idLists['done'] != '':
+        print("All required lists are present in the board")
+    else:
+        print("The required lists for the To-Do App are present in the board" +
+              "\nPlease ensure the following lists are created: To-Do, Doing and Done")
+    return idLists
+
+
+def get_items():
+    board_id = get_board_id()
+    cards_response = requests.get(
+        "https://api.trello.com/1/boards/" + board_id + "/cards",
+        params={
+            'key': TRELLO_API_KEY,
+            'token': TRELLO_API_TOKEN
+        }
+    )
+    return json.loads(cards_response.text)
+
+
+def add_item(title):
+    board_id = get_board_id()
+    idLists = get_lists_id(board_id)
+    requests.post(
+        "https://api.trello.com/1/cards/",
+        params={
+            'key': TRELLO_API_KEY,
+            'token': TRELLO_API_TOKEN,
+            'idList': idLists['todo'],
+            'name': title
+        }
+    )
+
+
+'''
+items = get_items()
+print(items)
+add_item("test api 2")'''
