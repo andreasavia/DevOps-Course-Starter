@@ -4,8 +4,7 @@ import json
 
 
 def get_board_id():
-    boards_response = requests.request(
-        "GET",
+    boards_response = requests.get(
         "https://api.trello.com/1/members/me/boards/",
         params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN}
     )
@@ -30,8 +29,7 @@ def get_board_id():
 
 
 def get_lists_id(board_id):
-    lists_response = requests.request(
-        "GET",
+    lists_response = requests.get(
         "https://api.trello.com/1/boards/" + board_id + "/lists",
         params={
             'key': TRELLO_API_KEY,
@@ -59,14 +57,32 @@ def get_lists_id(board_id):
 
 def get_items():
     board_id = get_board_id()
-    cards_response = requests.get(
-        "https://api.trello.com/1/boards/" + board_id + "/cards",
+    idLists = get_lists_id(board_id)
+
+    todo_items = get_cards_in_list(idLists['todo'])
+    for todo_item in todo_items:
+        todo_item['status'] = 'to_do'
+
+    doing_items = get_cards_in_list(idLists['doing'])
+    for doing_item in doing_items:
+        doing_item['status'] = 'doing'
+
+    done_items = get_cards_in_list(idLists['done'])
+    for done_item in done_items:
+        done_item['status'] = 'done'
+
+    return todo_items + doing_items + done_items
+
+
+def get_cards_in_list(id_list):
+    response = requests.get(
+        "https://api.trello.com/1/lists/" + id_list + "/cards",
         params={
             'key': TRELLO_API_KEY,
-            'token': TRELLO_API_TOKEN
+            'token': TRELLO_API_TOKEN,
         }
     )
-    return json.loads(cards_response.text)
+    return json.loads(response.text)
 
 
 def add_item(title):
@@ -83,7 +99,30 @@ def add_item(title):
     )
 
 
-'''
-items = get_items()
-print(items)
-add_item("test api 2")'''
+def complete_item(id):
+    board_id = get_board_id()
+    idLists = get_lists_id(board_id)
+
+    requests.put(
+        "https://api.trello.com/1/cards/" + id,
+        params={
+            'key': TRELLO_API_KEY,
+            'token': TRELLO_API_TOKEN,
+            'idList': idLists['done']
+        }
+    )
+
+
+def delete_item(id):
+    requests.put(
+        "https://api.trello.com/1/cards/" + id,
+        params={
+            'key': TRELLO_API_KEY,
+            'token': TRELLO_API_TOKEN,
+            'closed': 1
+        }
+    )
+
+
+def sort_items():
+    return get_items()

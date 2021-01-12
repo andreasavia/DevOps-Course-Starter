@@ -27,24 +27,24 @@
           {% for item in items %}
           <li class="list-group-item d-flex align-items-center" style="max-height: 30pt;">
 
-            {% if item.status == "Not Started" %}
-            <span>{{ item.title }}</span>
+            {% if item['status'] == "to_do" %}
+            <span>{{ item['name'] }}</span>
             <span>&nbsp</span>
             <span class="badge badge-secondary badge-pill">to do</span>
             <span style="right: 0%;position: absolute;">
-              <a href="{{ url_for('complete',id=item.id) }}">
+              <a href="{{ url_for('complete',id=item['id']) }}">
                 <i class="border-0 btn-transition btn btn-outline-success fa fa-check"></i></a>
-              <a href="{{ url_for('delete',id=item.id) }}">
+              <a href="{{ url_for('delete',id=item['id']) }}">
                 <i class="border-0 btn-transition btn btn-outline-danger fa fa-trash"></i></a>
             </span>
 
             {% else %}
-            <span>{{ item.title }}</span>
+            <span>{{ item['name'] }}</span>
             <span>&nbsp</span>
             <span class="badge badge-success badge-pill">completed</span>
             <span style="right: 0%;position: absolute;">
               <i class="border-0 btn-transition btn btn-outline-info fa fa-archive"></i>
-              <a href="{{ url_for('delete',id=item.id) }}">
+              <a href="{{ url_for('delete',id=item['id']) }}">
                 <i class="border-0 btn-transition btn btn-outline-danger fa fa-trash"></i></a>
             </span>
 
