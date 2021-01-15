@@ -13,8 +13,6 @@ class Item:
         self.name = name
         self.status = status
 
-    # def get_item():
-
     def add(name):
         requests.post(URL,
                       params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN,
@@ -23,42 +21,37 @@ class Item:
                               }
                       )
 
-    def start(self, id):
+    def start(id):
         requests.put(URL + id,
                      params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN,
                              'idList': DOING_LIST_ID
                              }
                      )
-        self.status = "doing"
 
-    def complete(self, id):
+    def complete(id):
         requests.put(URL + id,
                      params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN,
                              'idList': DONE_LIST_ID
                              }
                      )
-        self.status = "done"
 
-    def stop(self, id):
+    def stop(id):
         requests.put(URL + id,
                      params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN,
                              'idList': TODO_LIST_ID
                              }
                      )
-        self.status = "todo"
 
-    def reopen(self, id):
+    def reopen(id):
         requests.put(URL + id,
                      params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN,
                              'idList': TODO_LIST_ID
                              }
                      )
-        self.status = "todo"
 
-    def archive(self, id):
+    def archive(id):
         requests.put(URL + id,
                      params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN,
                              'closed': 1
                              }
                      )
-        self.status = "closed"
