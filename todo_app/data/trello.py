@@ -12,27 +12,6 @@ class TrelloDetails:
     as well as Trelli Key and Token'''
 
 
-def get_board_id():
-    boards_response = requests.get(
-        "https://api.trello.com/1/members/me/boards/",
-        params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN}
-    )
-    boards = json.loads(boards_response.text)
-    board_id = None
-    board_name = None
-
-    for board in boards:
-        board_name = board['name']
-        board_closed = board['closed']
-
-        if board_name == "To-Do App" and board_closed is False:
-            board_id = board['id']
-            break
-
-    # if board_id is None:
-    return board_id
-
-
 def get_lists_id(board_id):
     lists_response = requests.get(
         "https://api.trello.com/1/boards/" + board_id + "/lists",
@@ -58,6 +37,27 @@ def get_lists_id(board_id):
         print("The required lists for the To-Do App are present in the board" +
               "\nPlease ensure the following lists are created: To-Do, Doing and Done")
     return idLists
+
+
+def get_board_id():
+    boards_response = requests.get(
+        "https://api.trello.com/1/members/me/boards/",
+        params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN}
+    )
+    boards = json.loads(boards_response.text)
+    board_id = None
+    board_name = None
+
+    for board in boards:
+        board_name = board['name']
+        board_closed = board['closed']
+
+        if board_name == "To-Do App" and board_closed is False:
+            board_id = board['id']
+            break
+
+    # if board_id is None:
+    return board_id
 
 
 BOARD_ID = get_board_id()

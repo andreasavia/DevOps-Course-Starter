@@ -1,7 +1,6 @@
-from todo_app.data.item import Item
+from todo_app.data.item import Item, get_items
 from flask.globals import request
 from flask.helpers import url_for
-from todo_app.data.items_mgmt import add_item, get_items, complete_item, delete_item, sort_items
 from flask import Flask, render_template, redirect
 
 from todo_app.flask_config import Config
@@ -18,28 +17,26 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add():
-    item = Item(request.form.get('newItem'))
-    item.add()
-
-    Item.add('test name')
+    item_name = request.form.get('newItem')
+    Item.add(item_name)
     return redirect(url_for('index'))
 
 
 @app.route('/complete/<id>')
 def complete(id):
-    # complete_item(id)
+    Item.complete(id)
     return redirect(url_for('index'))
 
 
 @app.route('/delete/<id>')
 def delete(id):
-    delete_item(id)
+    Item.archive(id)
     return redirect(url_for('index'))
 
 
 @app.route('/sort/<order>')
 def sort(order):
-    sort_items(order)
+    # sort_items(order)
     return redirect(url_for('index'))
 
 
