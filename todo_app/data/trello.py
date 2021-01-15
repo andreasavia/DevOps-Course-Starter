@@ -1,67 +1,33 @@
-from todo_app.flask_config import TRELLO_API_KEY, TRELLO_API_TOKEN
 import requests
 import json
+import os
 
 
 class TrelloDetails:
 
-    ''' setup function to set 
-    TODO_LIST_ID = lists_id['todo']
-    DOING_LIST_ID = lists_id['doing']
-    DONE_LIST_ID = lists_id['done']
-    as well as Trelli Key and Token'''
+    def __init__(self):
+        self.api_key = os.environ.get('TRELLO_API_KEY')
+        self.api_token = os.environ.get('TRELLO_API_TOKEN')
 
+        boards_response = requests.get("https://api.trello.com/1/members/me/boards/",
+                                       params={'key': self.api_key, 'token': self.api_token})
+        boards = json.loads(boards_response.text)
 
-def get_lists_id(board_id):
-    lists_response = requests.get(
-        "https://api.trello.com/1/boards/" + board_id + "/lists",
-        params={
-            'key': TRELLO_API_KEY,
-            'token': TRELLO_API_TOKEN
-        }
-    )
+        for board in boards:
+            board_name = board['name']
+            board_closed = board['closed']
 
-    lists = json.loads(lists_response.text)
-    idLists = {'todo': '', 'doing': '', 'done': ''}
-    for list in lists:
-        if list['name'] == 'To-Do' and list['closed'] is False:
-            idLists['todo'] = list['id']
-        elif list['name'] == 'Doing' and list['closed'] is False:
-            idLists['doing'] = list['id']
-        elif list['name'] == 'Done' and list['closed'] is False:
-            idLists['done'] = list['id']
+            if board_name == "To-Do App" and board_closed is False:
+                self.id_board = board['id']
+                break
 
-    if idLists['todo'] != '' and idLists['doing'] != '' and idLists['done'] != '':
-        print("All required lists are present in the board")
-    else:
-        print("The required lists for the To-Do App are present in the board" +
-              "\nPlease ensure the following lists are created: To-Do, Doing and Done")
-    return idLists
-
-
-def get_board_id():
-    boards_response = requests.get(
-        "https://api.trello.com/1/members/me/boards/",
-        params={'key': TRELLO_API_KEY, 'token': TRELLO_API_TOKEN}
-    )
-    boards = json.loads(boards_response.text)
-    board_id = None
-    board_name = None
-
-    for board in boards:
-        board_name = board['name']
-        board_closed = board['closed']
-
-        if board_name == "To-Do App" and board_closed is False:
-            board_id = board['id']
-            break
-
-    # if board_id is None:
-    return board_id
-
-
-BOARD_ID = get_board_id()
-lists_id = get_lists_id(BOARD_ID)
-TODO_LIST_ID = lists_id['todo']
-DOING_LIST_ID = lists_id['doing']
-DONE_LIST_ID = lists_id['done']
+        lists_response = requests.get("https://api.trello.com/1/boards/" + self.id_board + "/lists",
+                                      params={'key': self.api_key, 'token': self.api_token})
+        lists = json.loads(lists_response.text)
+        for list in lists:
+            if list['name'] == 'To-Do' and list['closed'] is False:
+                self.id_list_todo = list['id']
+            elif list['name'] == 'Doing' and list['closed'] is False:
+                self.id_list_doing = list['id']
+            elif list['name'] == 'Done' and list['closed'] is False:
+                self.id_list_done = list['id']
