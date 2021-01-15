@@ -1,4 +1,6 @@
+from operator import itemgetter
 from todo_app.data.trello import TrelloDetails
+from todo_app.data.session import get_sorting
 import requests
 import json
 
@@ -48,6 +50,7 @@ def get_cards_in_list(id_list):
 def get_items():
 
     items = []
+    sorting = get_sorting()
 
     todo_items = get_cards_in_list(trello.id_list_todo)
     for todo_item in todo_items:
@@ -63,5 +66,10 @@ def get_items():
     for done_item in done_items:
         item = Item(done_item['id'], done_item['name'], '2_done')
         items.append(item)
+
+    if sorting == "ascending":
+        items.sort(key=lambda x: x.status)
+    elif sorting == "descending":
+        items.sort(key=lambda x: x.status, reverse=True)
 
     return items

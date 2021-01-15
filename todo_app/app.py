@@ -1,4 +1,5 @@
 from todo_app.data.item import Item, get_items
+from todo_app.data.session import set_sorting
 from flask.globals import request
 from flask.helpers import url_for
 from flask import Flask, render_template, redirect
@@ -36,7 +37,7 @@ def delete(id):
 
 @app.route('/sort/<order>')
 def sort(order):
-    # sort_items(order)
+    set_sorting(order)
     return redirect(url_for('index'))
 
 

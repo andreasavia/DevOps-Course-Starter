@@ -74,9 +74,8 @@
     <hr>
 
     <div>
-      <a class="btn btn-info" href="{{ url_for('sort', order=1) }}">Sort by Done</a>
-      <a class="btn btn-info" href="{{ url_for('sort', order=2) }}">Sort by Not Started</a>
-      <a class="btn btn-secondary" href="{{ url_for('sort', order=0) }}">Restore Order</a>
+      <a class="btn btn-info" href="{{ url_for('sort', order='descending') }}">Sort by Done</a>
+      <a class="btn btn-info" href="{{ url_for('sort', order='ascending') }}">Sort by Not Started</a>
     </div>
   </div>
 
