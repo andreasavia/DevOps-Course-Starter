@@ -1,3 +1,4 @@
+from todo_app.data.item import Item
 from flask.globals import request
 from flask.helpers import url_for
 from todo_app.data.items_mgmt import add_item, get_items, complete_item, delete_item, sort_items
@@ -17,13 +18,16 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add():
-    add_item(request.form.get('newItem'))
+    item = Item(request.form.get('newItem'))
+    item.add()
+
+    Item.add('test name')
     return redirect(url_for('index'))
 
 
 @app.route('/complete/<id>')
 def complete(id):
-    complete_item(id)
+    # complete_item(id)
     return redirect(url_for('index'))
 
 

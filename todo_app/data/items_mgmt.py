@@ -1,4 +1,6 @@
+from operator import itemgetter
 from todo_app.flask_config import TRELLO_API_KEY, TRELLO_API_TOKEN
+from todo_app.data.item import Item
 import requests
 import json
 
@@ -15,16 +17,12 @@ def get_board_id():
     for board in boards:
         board_name = board['name']
         board_closed = board['closed']
-        print("Evaluating Trello board " + board_name)
 
         if board_name == "To-Do App" and board_closed is False:
             board_id = board['id']
-            print("Trello board " + board_name + " found!")
             break
 
-    if board_id is None:
-        print("Trello board not found among existing ones and creating a new one for the To-Do App!")
-
+    # if board_id is None:
     return board_id
 
 
@@ -55,25 +53,6 @@ def get_lists_id(board_id):
     return idLists
 
 
-def get_items():
-    board_id = get_board_id()
-    idLists = get_lists_id(board_id)
-
-    todo_items = get_cards_in_list(idLists['todo'])
-    for todo_item in todo_items:
-        todo_item['status'] = 'to_do'
-
-    doing_items = get_cards_in_list(idLists['doing'])
-    for doing_item in doing_items:
-        doing_item['status'] = 'doing'
-
-    done_items = get_cards_in_list(idLists['done'])
-    for done_item in done_items:
-        done_item['status'] = 'done'
-
-    return todo_items + doing_items + done_items
-
-
 def get_cards_in_list(id_list):
     response = requests.get(
         "https://api.trello.com/1/lists/" + id_list + "/cards",
@@ -83,6 +62,30 @@ def get_cards_in_list(id_list):
         }
     )
     return json.loads(response.text)
+
+
+def get_items():
+    board_id = get_board_id()
+    idLists = get_lists_id(board_id)
+
+    items = []
+
+    todo_items = get_cards_in_list(idLists['todo'])
+    for todo_item in todo_items:
+        item = Item(todo_item['id'], todo_item['name'], '0_to_do')
+        items.append(item)
+
+    doing_items = get_cards_in_list(idLists['doing'])
+    for doing_item in doing_items:
+        item = Item(doing_item['id'], doing_item['name'], '1_doing')
+        items.append(item)
+
+    done_items = get_cards_in_list(idLists['done'])
+    for done_item in done_items:
+        item = Item(done_item['id'], done_item['name'], '2_done')
+        items.append(item)
+
+    return items
 
 
 def add_item(title):
@@ -124,5 +127,21 @@ def delete_item(id):
     )
 
 
-def sort_items():
-    return get_items()
+def sort_items(order):
+    items = get_items()
+    if order == "0":
+        sorted_items = sorted(items, key=itemgetter('id'))
+        print(sorted_items)
+        print("items order updated : 0")
+    elif order == "1":
+        sorted_items = sorted(items, key=itemgetter('status'))
+        print(sorted_items)
+        print("items order updated : 1")
+    elif order == "2":
+        sorted_items = sorted(items, key=itemgetter('status'), reverse=True)
+        print(sorted_items)
+        print("items order updated : 2")
+    else:
+        sorted_items = items
+        print("items order NOT updated")
+    return sorted_items
